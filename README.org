@@ -1,0 +1,74 @@
+#+AUTHOR: Bob Uhl
+#+TITLE: declare
+#+SUBTITLE: A Common Lisp implementation for dynamic languages
+* Introduction
+  Dynamic languages such as Lua, Python and JavaScript have become
+  increasingly popular over the past decade and more.  They tend to
+  offer a reliable core set of services: memory management, safe
+  strings & smart types, among others (these were all available in
+  Common Lisp in 1994); what they tend not to offer is metaprogramming
+  and optional strong typing.  Beneath their superficial differences,
+  these languages share certain strong similarities (of course,
+  beneath those similarities, they have some pretty strong
+  differences…) and it should be possible to write a Common Lisp
+  implementation which takes advantage of their memory management and
+  similar dictionary/hash table/associative array implementations.
+
+  declare is that implementation.
+** Genesis
+  I conceived of the idea for declare while playing with
+  [[http://www.computercraft.info/][ComputerCraft]], a /really/ nifty Minecraft mod which adds computers
+  (programmable in Lua) to Minecraft.  Although the mod is really cool
+  and a lot of fun, CraftOS is fairly limited.  In particular, it'd be
+  awesome to have computers scattered across the world, talking to one
+  another, and be able to control all of them from one terminal.  It
+  occurred to me that what'd be really neat would be an OS like Plan
+  9, which excelled at dynamically creating namespaces across multiple
+  machines.
+
+  I started working on PlanMine (name…not great), but I soon
+  encountered an issue: two basic building blocks of POSIX & Plan 9
+  systems are ~fork()~ & ~exec()~, Lua's coroutines don't support such
+  a use-case (coroutines in general can't; one needs to compile a
+  ~fork()/exec()~-supporting language down to a coroutine-supporting
+  language).  Nor, really, is Lua all that pleasant to program in.
+  It's not a bad language at all, but it's unusual (one-based arrays,
+  no integers until recently, verbose block syntax) and of course it's
+  not Common Lisp.  So it struck me: rather than write a Lua-to-Lua
+  compiler to support what I needed, why not right a Lisp-to-Lua
+  compiler instead, and be able to write most of my OS in a nicer
+  language?
+
+  My first try was exactly that: compiling Common Lisp down to Lua.
+  The problem I encountered is that this became /extremely/ verbose:
+  lots and lots of nested functions using Lua's ~function (args) …
+  end~ syntax.  My next try was an interpreter, written in
+  continuation-passing-style (CPS) approach, but writing a large
+  program in CPS is brutal.  So I switched to a bytecode compiler, and
+  here we are.
+
+  As I worked on this, I realised that much of the same work could be
+  reused in an implementation running atop JavaScript or Python.
+** Goals
+  1. A Common Lisp implementation for Lua
+  2. Support for writing an OS-like underlay capable of supporting
+     multiprocessing & privileges
+  3. A Common Lisp implementation for JavaScript
+  4. A Common Lisp implementation for Python
+** Acknowledgements
+  I owe a /huge/ debt to CLISP, particularly for the bytecode I chose.
+  Although my implementation of choice is SBCL, CLISP really is nice;
+  one could do worse than to choose it.
+* Design
+** Bytecode
+** Lisp objects
+Lisp objects are represented as native implementation objects.
+** Supporting library
+* Implementation
+The most important thing in a Lisp implementation is a REPL: if one
+has even a minimal REPL, one can implement more in a gradual manner.
+And the initial part of a REPL is ~READ~; the ~PRINT~ portion is
+fairly simple, and the loop portion is simplicity itself.  Why not
+write a basic ~READ~, then a compiler to turn it into bytecode, then
+the necessary support to execute it, then implement ~EVAL~ using the
+already-written compiler?  It practically writes itself!
