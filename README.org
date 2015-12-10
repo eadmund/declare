@@ -273,6 +273,7 @@ The class ~STANDARD-CLASS~ represents a standard Common Lisp Object System
 #+BEGIN_SRC lua :tangle classes.lua :exports none :noweb yes
   <<classes-header>>
   <<classes-t>>
+  classes.T.class = classes["BUILT-IN-CLASS"]
   <<classes-built-in-class>>
   <<classes-built-in-classes>>
   <<classes-standard-object>>
@@ -1343,7 +1344,7 @@ single namespace for packages themselves in each process environment.
 NIL and T, loads in the other static modules of the system, and then
 dynamically stitches them all together.
 
-#+BEGIN_SRC lua :tangle init.lua :exports none :noweb yes
+#+BEGIN_SRC lua :tangle init.lua :noweb yes
   <<NIL>>
   classes = require("classes")
   symbol = require("symbol")
