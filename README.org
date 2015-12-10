@@ -384,13 +384,23 @@ dynamically stitches them all together.
      class.name = sym
   end
 
-  function cons(car, cdr)
-     return {
-        car = car,
-        cdr = cdr,
-        class = classes.CONS,
-     }
-  end
+  <<init-cons>>
+#+END_SRC
+
+** Supporting library
+*** CONS
+~CONS~ constructs a fresh cons cell, which is a simple object
+containing a ~car~ and a ~cdr~.  It's one of the simplest Lisp
+functions, and the building block of so many more.
+#+NAME: init-cons
+#+BEGIN_SRC lua
+function cons(car, cdr)
+   return {
+      car = car,
+      cdr = cdr,
+      class = classes.CONS,
+   }
+end
 #+END_SRC
 
 #+LaTeX: \appendix
