@@ -1,4 +1,4 @@
-FILES = init.lua classes.lua clpackage.lua symbol.lua cl-symbols.lua
+FILES = init.lua classes.lua clpackage.lua symbol.lua cl-symbols.lua test_root.lua
 
 $(FILES): declare.org
 	emacs --batch --no-init-file --load org --find-file declare.org --funcall org-babel-tangle --kill
@@ -6,7 +6,7 @@ $(FILES): declare.org
 all: $(FILES)
 
 clean:
-	rm $(FILES)
+	rm -f $(FILES)
 
-test: $(FILES) test_root.lua
+test: $(FILES)
 	lua test_root.lua
