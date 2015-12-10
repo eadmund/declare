@@ -1362,4 +1362,12 @@ dynamically stitches them all together.
      env.classes[sym] = class
      class.name = sym
   end
+
+  function cons(car, cdr)
+     return {
+        car = car,
+        cdr = cdr,
+        class = classes.CONS,
+     }
+  end
 #+END_SRC
